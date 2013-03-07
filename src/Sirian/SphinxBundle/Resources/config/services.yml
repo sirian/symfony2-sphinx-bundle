@@ -1,0 +1,9 @@
+parameters:
+    sirian.sphinx.client.class: Sirian\SphinxBundle\Sphinx\SphinxClient
+
+services:
+    sirian.sphinx.client:
+        class: %sirian.sphinx.client.class%
+        file: %kernel.root_dir%/../vendor/sirian/symfony-sphinx-bundle/src/Sirian/SphinxBundle/Sphinx/SphinxApi.php
+        calls:
+            - [setContainer, [@service_container]]
