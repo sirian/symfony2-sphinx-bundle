@@ -4,6 +4,9 @@ namespace Sirian\SphinxBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -17,12 +20,21 @@ class SirianSphinxExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $sphinx = $container->getDefinition('sirian.sphinx.client');
-        $searchConfig = $config['searchd'];
-        if ($searchConfig['socket']) {
-            $sphinx->addMethodCall('setServer', [$searchConfig['socket']]);
-        } else {
-            $sphinx->addMethodCall('setServer', [$searchConfig['host'], $searchConfig['port']]);
+        if (empty($config['default_connection'])) {
+            $keys = array_keys($config['connections']);
+            $config['default_connection'] = reset($keys);
         }
+
+        $connections = [];
+        foreach ($config['connections'] as $name => $connectionOptions) {
+            $connections[$name] = sprintf('sirian.sphinx.%s_connection', $name);
+
+            $connectionDefinition = new DefinitionDecorator('sirian.sphinx.connection');
+            $connectionDefinition->setArguments([$connectionOptions]);
+            $container->setDefinition($connections[$name], $connectionDefinition);
+        }
+
+        $container->setParameter('sirian.sphinx.default_connection', $config['default_connection']);
+        $container->setParameter('sirian.sphinx.connections', $connections);
     }
 }
