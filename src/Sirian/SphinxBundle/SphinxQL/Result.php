@@ -23,6 +23,15 @@ class Result
         return $this->data;
     }
 
+    public function getIds($field = 'id')
+    {
+        $res = [];
+        foreach ($this->data as $row) {
+            $res[] = $row[$field];
+        }
+        return $res;
+    }
+
     public function getTotal()
     {
         return $this->getMetaField('total', 0);
