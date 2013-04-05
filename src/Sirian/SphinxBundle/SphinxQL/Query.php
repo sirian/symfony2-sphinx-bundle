@@ -24,9 +24,10 @@ class Query
         if (is_null($params)) {
             $params = $this->params;
         }
-        $data =  $this->fetchAllAssoc($this->connection->execute($this->sql, $params));
+        $sql = $this->connection->execute($this->sql, $params);
+        $data =  new Data($this->fetchAllAssoc($sql));
         $meta = $this->parseMeta($this->connection->execute('SHOW META'));
-        return new Result($data, $meta);
+        return new Result($data, $meta, $sql);
     }
 
     protected function fetchAllAssoc(\mysqli_result $a)

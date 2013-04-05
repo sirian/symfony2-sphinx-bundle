@@ -63,6 +63,7 @@ class Connection extends \Mysqli
         if ($this->stopWatch) {
             $this->stopWatch->start('sphinx');
         }
+
         $res = parent::query($query, $mode);
         if ($this->stopWatch) {
             $this->stopWatch->stop('sphinx');

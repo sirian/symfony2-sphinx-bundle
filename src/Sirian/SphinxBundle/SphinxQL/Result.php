@@ -4,10 +4,10 @@ namespace Sirian\SphinxBundle\SphinxQL;
 
 class Result
 {
-    protected $data = array();
+    protected $data;
     protected $meta = array();
 
-    public function __construct($data = array(), $meta = array())
+    public function __construct(Data $data, $meta = array())
     {
         $this->data = $data;
         $this->meta = $meta;
@@ -21,15 +21,6 @@ class Result
     public function getData()
     {
         return $this->data;
-    }
-
-    public function getIds($field = 'id')
-    {
-        $res = [];
-        foreach ($this->data as $row) {
-            $res[] = $row[$field];
-        }
-        return $res;
     }
 
     public function getTotal()
