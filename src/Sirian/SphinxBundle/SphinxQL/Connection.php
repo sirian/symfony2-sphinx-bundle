@@ -2,24 +2,24 @@
 
 namespace Sirian\SphinxBundle\SphinxQL;
 
+use Sirian\SphinxBundle\Logger\QueryLogger;
 use Sirian\SphinxBundle\Sphinx\SphinxException;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 class Connection extends \Mysqli
 {
     /**
-     * @var Stopwatch
+     * @var QueryLogger
      */
-    protected $stopWatch;
+    protected $queryLogger;
 
     public function __construct($options)
     {
         parent::__construct($options['host'], '', '', '', $options['port']);
     }
 
-    public function setStopWatch($stopWatch)
+    public function setQueryLogger(QueryLogger $queryLogger)
     {
-        $this->stopWatch = $stopWatch;
+        $this->queryLogger = $queryLogger;
     }
 
     protected function constructPdoDsn($params)
@@ -60,14 +60,7 @@ class Connection extends \Mysqli
 
     public function query ($query, $mode = MYSQLI_STORE_RESULT)
     {
-        if ($this->stopWatch) {
-            $this->stopWatch->start('sphinx');
-        }
-
         $res = parent::query($query, $mode);
-        if ($this->stopWatch) {
-            $this->stopWatch->stop('sphinx');
-        }
         if (!$res) {
             throw new SphinxException($this->error);
         }
@@ -76,7 +69,26 @@ class Connection extends \Mysqli
 
     public function execute($sql, $params = array())
     {
-        $sql = preg_replace_callback('/(?P<type>[ifsem]?):(?P<param>[_a-zA-Z0-9]+)/', function ($matches) use ($params) {
+        $realSql = $this->prepareSql($sql, $params);
+        if (null !== $this->queryLogger) {
+            $this->queryLogger->startQuery($sql, $params, $realSql);
+        }
+
+        $res = $this->query($realSql);
+
+        if (null !== $this->queryLogger) {
+            $this->queryLogger->stopQuery();
+        }
+
+        return $res;
+    }
+
+    public function prepareSql($sql, $params = array())
+    {
+        return preg_replace_callback('/(?P<type>[ifsem]?):(?P<param>[_a-zA-Z0-9]+)/', function ($matches) use ($params) {
+            if (!isset($params[$matches['param']])) {
+                throw new SphinxException(sprintf('Parameter "%s" not provided', $matches['param']));
+            }
             $val = $params[$matches['param']];
             $type = 's';
 
@@ -108,7 +120,5 @@ class Connection extends \Mysqli
             }
             return implode(',', $parts);
         }, $sql);
-
-        return $this->query($sql);
     }
 }

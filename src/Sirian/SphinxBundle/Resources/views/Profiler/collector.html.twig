@@ -1,0 +1,144 @@
+{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        <img width="20" height="28" alt="Database" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABFNJREFUeNrslktMY3UUxk9bWiiUV3g0dIKU8iwBAgEGEhZu2IwBnBg2MxWXk4wGYuLCZHSBcTcmGtjLhIWyEDuiY1IpJoAhU54FVhAGwqOUN8O70AL1+25mHBxNi4uZROM/ae7t/T++8/idc68qGAzK6xxqec3jvy8Y8fKDpaUl2draUn5Go1GcTudber3+/sDAgGVhYUF0Op3k5uZy7oft7e0vU1JSRhsaGiQhIUEuLi7+ImCxWEILchAkHFzS399/1+Fw3NnY2BCNRiNnZ2fi8/lkdHSUa25lZ2ffioiIaI2Njf00MjLy8PT0VFQqVUgPVS9Tury8LIeHh6UdHR3fdHd3W6OioiQpKclfWVnpKSkp+fHo6OiN6enpyuHh4ZTd3V1dTEyMlJeXf4s5W35+vmLU5VFdXR3aQ3ii6u3tfY9iOOy8rq5uAl59ghC6Kioq9jC0BwcHhuTk5HyE66Hb7TZi/e34+PhNs9n8MYw9/UfQzMzM3LDb7R8yVxCbamxsLEeofvH7/XsM58nJSQD3TyH8GII3rVbrCsMIr+8EAoE3U1NTGZE/fmGhmZiYuA8YBB4EEMZ7OETOz8//BASNsdlsBMdVWlr62erqauvk5KQeubaUlZUxJVen1OVyFdDiqqoqD0j9dWdnR/Ly8oS5fC7G+cLCQgUk3D8AoffW1tbMoPj9sbGxLkRh6/l56enpoQWx6QTe6AGBA9YGjo+PlYPVarUglJwXr9cr7e3tyjPMnaE0jmZnZwVAGREdHQSv7iHwFopg8zXAwc1+hpSig4ODzJUYDAZlLQ3QarWK8IuKCkqo/hzxN4WqRT4ITxkg0VC8qKhIenp6ZH9/X1BzMjc3J/X19YIo8F4Db2NYDoDkSVZWlo97rkwp0O8iKENDQ6nr6+uFm5ubwoJGzSnecMB7QRlITk4On32BuQzWI+6/hpFPuZ7e8xpWEJs+Rz0J6w25+gmQXGeI0FFebEIICc/Kysr1zs7Ot0GlCu3OBS9/w5CRkRFBYyDx4QVB3RI6RyupHB8fNyJndhjxAZ6rKfRMTA2xr1paWr6fn5+3cC3yHI85Aw3jjzmPjo4O39oIBZq1tq2t7UFfX5+NuQGFAYh4gLgPBwVBZDTCmsnQ0lMeznOQUy/aWy3C6eZ/hrmpqSk8pbAsgEPeLSgoWMe1CZ5q4UGmx+NR1rAJwAi+IR5jPgF5trI2UYMmXB+hbmuRP/eVKKVlPJClkJiY+BEIdWZkZJjj4uLuogmkcQlInUZ+OiDogHEJmHeiYZgYSrxJTFjzM3L6DvtIWMHLg8IoBUdxcbGYTKbvFhcXo+gJWtrh1NTUHsON8HnRT2tx/4hizDGuadhrBwt1OGbsyoLPIFLwBu7b7CD8zyZ+eTBnyB09eghC01g+SEMaWOjCs8xX8okB0SGI3oRXq6xjgoRX17VX+k0D0WE09Rs1NTVPAJ+vubn5IGxZ/P+Z+K8T/F2AAQA571QprnaCwgAAAABJRU5ErkJggg==" />
+        <span class="sf-toolbar-status">{{ collector.queryCount }}</span>
+        {% if collector.queryCount > 0 %}
+            <span class="sf-toolbar-info-piece-additional-detail">in {{ '%0.2f'|format(collector.time * 1000) }} ms</span>
+        {% endif %}
+    {% endset %}
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            <b>Sphinx Queries</b>
+            <span>{{ collector.queryCount }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Query time</b>
+            <span>{{ '%0.2f'|format(collector.time * 1000) }} ms</span>
+        </div>
+    {% endset %}
+    {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url } %}
+{% endblock %}
+
+{% block menu %}
+    <span class="label">
+        <span class="icon"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABFNJREFUeNrslktMY3UUxk9bWiiUV3g0dIKU8iwBAgEGEhZu2IwBnBg2MxWXk4wGYuLCZHSBcTcmGtjLhIWyEDuiY1IpJoAhU54FVhAGwqOUN8O70AL1+25mHBxNi4uZROM/ae7t/T++8/idc68qGAzK6xxqec3jvy8Y8fKDpaUl2draUn5Go1GcTudber3+/sDAgGVhYUF0Op3k5uZy7oft7e0vU1JSRhsaGiQhIUEuLi7+ImCxWEILchAkHFzS399/1+Fw3NnY2BCNRiNnZ2fi8/lkdHSUa25lZ2ffioiIaI2Njf00MjLy8PT0VFQqVUgPVS9Tury8LIeHh6UdHR3fdHd3W6OioiQpKclfWVnpKSkp+fHo6OiN6enpyuHh4ZTd3V1dTEyMlJeXf4s5W35+vmLU5VFdXR3aQ3ii6u3tfY9iOOy8rq5uAl59ghC6Kioq9jC0BwcHhuTk5HyE66Hb7TZi/e34+PhNs9n8MYw9/UfQzMzM3LDb7R8yVxCbamxsLEeofvH7/XsM58nJSQD3TyH8GII3rVbrCsMIr+8EAoE3U1NTGZE/fmGhmZiYuA8YBB4EEMZ7OETOz8//BASNsdlsBMdVWlr62erqauvk5KQeubaUlZUxJVen1OVyFdDiqqoqD0j9dWdnR/Ly8oS5fC7G+cLCQgUk3D8AoffW1tbMoPj9sbGxLkRh6/l56enpoQWx6QTe6AGBA9YGjo+PlYPVarUglJwXr9cr7e3tyjPMnaE0jmZnZwVAGREdHQSv7iHwFopg8zXAwc1+hpSig4ODzJUYDAZlLQ3QarWK8IuKCkqo/hzxN4WqRT4ITxkg0VC8qKhIenp6ZH9/X1BzMjc3J/X19YIo8F4Db2NYDoDkSVZWlo97rkwp0O8iKENDQ6nr6+uFm5ubwoJGzSnecMB7QRlITk4On32BuQzWI+6/hpFPuZ7e8xpWEJs+Rz0J6w25+gmQXGeI0FFebEIICc/Kysr1zs7Ot0GlCu3OBS9/w5CRkRFBYyDx4QVB3RI6RyupHB8fNyJndhjxAZ6rKfRMTA2xr1paWr6fn5+3cC3yHI85Aw3jjzmPjo4O39oIBZq1tq2t7UFfX5+NuQGFAYh4gLgPBwVBZDTCmsnQ0lMeznOQUy/aWy3C6eZ/hrmpqSk8pbAsgEPeLSgoWMe1CZ5q4UGmx+NR1rAJwAi+IR5jPgF5trI2UYMmXB+hbmuRP/eVKKVlPJClkJiY+BEIdWZkZJjj4uLuogmkcQlInUZ+OiDogHEJmHeiYZgYSrxJTFjzM3L6DvtIWMHLg8IoBUdxcbGYTKbvFhcXo+gJWtrh1NTUHsON8HnRT2tx/4hizDGuadhrBwt1OGbsyoLPIFLwBu7b7CD8zyZ+eTBnyB09eghC01g+SEMaWOjCs8xX8okB0SGI3oRXq6xjgoRX17VX+k0D0WE09Rs1NTVPAJ+vubn5IGxZ/P+Z+K8T/F2AAQA571QprnaCwgAAAABJRU5ErkJggg==" alt="" /></span>
+        <strong>Sphinx</strong>
+        <span class="count">
+            <span>{{ collector.queryCount }}</span>
+            <span>{{ '%0.0f'|format(collector.time * 1000) }} ms</span>
+        </span>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Queries</h2>
+
+    {% if collector.queries is empty %}
+        <p>
+            <em>No queries.</em>
+        </p>
+    {% else %}
+        <ul class="alt">
+            {% for i, query in collector.queries %}
+                <li class="{{ cycle(['odd', 'even'], i) }}" data-extra-info="{{ '%0.2f'|format(query.time * 1000) }}" data-target-id="{{ i }}">
+                    <div style="margin-top: 4px" id="queryNo-{{ i }}">
+                        <div onclick="return expandQuery(this);" title="Expand query" data-target-id="code-{{ i }}" style="cursor: pointer;">
+                            <img alt="+" src="{{ asset('bundles/framework/images/blue_picto_more.gif') }}" style="display: inline;" />
+                            <img alt="-" src="{{ asset('bundles/framework/images/blue_picto_less.gif') }}" style="display: none;" />
+                            <span style="display: none">Shrink query</span>
+                            <span id="smallcode-{{ i }}">
+                                {{ query.sql|doctrine_minify_query|raw }}
+                            </span>
+                        </div>
+                        <code id="code-{{ i }}">
+                            <pre>{{ query.sql|doctrine_pretty_query(i)|raw }}</pre>
+                        </code>
+                        <span id="original-query-{{ i }}" style="display: none;">{{ query.realSql|raw }}
+                        </span>
+                        <small>
+                            <strong>Parameters</strong>: {{ query.params|yaml_encode }} <br />
+                            [<span id="expandParams-{{ i }}" onclick="javascript:toggleRunnableQuery(this);" target-data-id="original-query-{{ i }}" style="cursor: pointer;">Display runnable query</span>]<br/>
+                            <strong>Time</strong>: {{ '%0.2f'|format(query.time * 1000) }} ms
+                        </small>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <script type="text/javascript">//<![CDATA[
+        function expandQuery(link) {
+            var sections = link.children,
+                target = link.getAttribute('data-target-id'),
+                targetId = target.replace('code', ''),
+                queriesParameters = document.getElementById('original-query' + targetId);
+
+            if (queriesParameters.style.display != 'none') {
+                queriesParameters.style.display = 'none';
+                document.getElementById('small' + target).style.display = 'inline';
+                document.getElementById('expandParams' + targetId).innerHTML = 'Display runnable query';
+            }
+
+            if (document.getElementById('small' + target).style.display != 'none') {
+                document.getElementById('small' + target).style.display = 'none';
+                document.getElementById(target).style.display = 'inline';
+
+                sections[0].style.display = 'none';
+                sections[1].style.display = 'inline';
+                sections[2].style.display = 'inline';
+            } else {
+                document.getElementById('small' + target).style.display = 'inline';
+                document.getElementById(target).style.display = 'none';
+
+                sections[0].style.display = 'inline';
+                sections[1].style.display = 'none';
+                sections[2].style.display = 'none';
+            }
+
+            return false;
+        }
+
+        function toggleRunnableQuery(target) {
+            var targetId = target.getAttribute('target-data-id').replace('original-query', ''),
+                targetElement = document.getElementById(target.getAttribute('target-data-id')),
+                elem;
+
+            if (targetElement.style.display != 'block') {
+                targetElement.style.display = 'block';
+                target.innerHTML = 'Hide runnable query';
+
+                document.getElementById('smallcode' + targetId).style.display = 'none';
+                document.getElementById('code' + targetId).style.display = 'none';
+
+                elem = document.getElementById('code' + targetId).parentElement.children[0];
+
+                elem.children[0].style.display = 'inline';
+                elem.children[1].style.display = 'none';
+                elem.children[2].style.display = 'none';
+
+            } else {
+                targetElement.style.display = 'none';
+                target.innerHTML = 'Display runnable query';
+
+                document.getElementById('smallcode' + targetId).style.display = 'inline';
+            }
+        }
+
+    //]]></script>
+
+    <style>
+        h3 {
+            margin-bottom: 0px;
+        }
+
+        code {
+            display: none;
+        }
+
+        code pre {
+            padding: 5px;
+        }
+    </style>
+{% endblock %}
