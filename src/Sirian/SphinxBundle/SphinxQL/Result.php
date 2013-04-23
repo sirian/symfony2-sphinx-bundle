@@ -28,9 +28,30 @@ class Result
         return $this->getMetaField('total', 0);
     }
 
+    public function getTime()
+    {
+        return $this->getMetaField('time', 0);
+    }
+
     public function getTotalFound()
     {
         return $this->getMetaField('total_found', 0);
+    }
+
+    public function getHits()
+    {
+        if (!isset($this->meta['keyword'], $this->meta['hits'])) {
+            return [];
+        }
+        return array_combine($this->meta['keyword'], $this->meta['hits']);
+    }
+
+    public function getDocs()
+    {
+        if (!isset($this->meta['keyword'], $this->meta['docs'])) {
+            return [];
+        }
+        return array_combine($this->meta['keyword'], $this->meta['docs']);
     }
 
     public function getMetaField($field, $defaultValue)

@@ -101,6 +101,7 @@ class Connection extends \Mysqli
 
             $parts = array();
             foreach ($val as $row) {
+
                 switch ($type) {
                     case 'e': //expression
                         $parts[] = $row;
@@ -112,12 +113,13 @@ class Connection extends \Mysqli
                         $parts[] = (int)$row;
                         break;
                     case 'm': //sphinx match
-                        $parts[] = $this->escape($this->escapeMatch($row)) ;
+                        $parts[] = $this->escape($this->escapeMatch($row));
                         break;
                     default:
                         $parts[] = "'" . $this->escape($row) . "'";
                 }
             }
+
             return implode(',', $parts);
         }, $sql);
     }

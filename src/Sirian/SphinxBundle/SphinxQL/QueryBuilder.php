@@ -451,11 +451,8 @@ class QueryBuilder
     /**
      * @return QueryBuilder
      */
-    public function setParameters($parameters)
+    public function setParameters(array $parameters)
     {
-        if (!is_array($parameters)) {
-            throw new \LogicException('Parameters should be key-value array');
-        }
         $this->parameters = $parameters;
 
         return $this;
@@ -493,15 +490,23 @@ class QueryBuilder
     {
         $parts = [];
         if (!empty($this->match)) {
-            $parts[] = 'MATCH(\'' . implode(' & ', $this->match) . '\')';
+            $match = array_filter($this->match, function ($match) {
+                $match = (string)$match;
+                return  $match !== '';
+            });
+            if ($match) {
+                $parts[] = 'MATCH(\'' . implode(' & ', $match) . '\')';
+            }
         }
 
         foreach ($this->where as $part) {
             $parts[] = $part;
         }
+
         if (empty($parts)) {
             return '';
         }
+
         return 'WHERE ' . implode(' AND ', $parts) . ' ';
     }
 

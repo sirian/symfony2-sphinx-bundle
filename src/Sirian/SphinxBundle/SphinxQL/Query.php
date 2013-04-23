@@ -43,7 +43,13 @@ class Query
     {
         $res = [];
         foreach ($a as $row) {
-            $res[$row['Variable_name']] = $row['Value'];
+            $var = $row['Variable_name'];
+            $value = $row['Value'];
+            if (preg_match('/^(?P<var>[_a-z0-9]+)\[(?<index>\d+)\]$/', $var, $matches)) {
+                $res[$matches['var']][$matches['index']] = $value;
+            } else {
+                $res[$var] = $value;
+            }
         }
         return $res;
     }
