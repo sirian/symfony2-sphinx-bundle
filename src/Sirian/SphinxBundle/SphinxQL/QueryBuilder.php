@@ -495,7 +495,7 @@ class QueryBuilder
                 return  $match !== '';
             });
             if ($match) {
-                $parts[] = 'MATCH(\'' . implode(' & ', $match) . '\')';
+                $parts[] = 'MATCH(\'(' . implode(') (', $match) . ')\')';
             }
         }
 
