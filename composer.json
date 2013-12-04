@@ -1,7 +1,6 @@
 {
     "name": "sirian/symfony-sphinx-bundle",
     "require": {
-        "symfony/framework-bundle": "2.2.*"
     },
     "autoload": {
         "psr-0": { "Sirian\\": "src/" }
