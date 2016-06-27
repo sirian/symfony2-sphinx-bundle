@@ -4,10 +4,12 @@ namespace Sirian\SphinxBundle;
 
 use Sirian\SphinxBundle\SphinxQL\Connection;
 use Sirian\SphinxBundle\SphinxQL\QueryBuilder;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class Manager extends ContainerAware
+class Manager
 {
+    use ContainerAwareTrait;
+
     protected $connections = array();
     protected $defaultConnection = null;
 
