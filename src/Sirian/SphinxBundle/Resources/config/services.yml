@@ -6,25 +6,25 @@ parameters:
 
 services:
     sirian.sphinx.manager:
-        class: %sirian.sphinx.manager.class%
+        class: "%sirian.sphinx.manager.class%"
         arguments:
-            - %sirian.sphinx.connections%
-            - %sirian.sphinx.default_connection%
+            - "%sirian.sphinx.connections%"
+            - "%sirian.sphinx.default_connection%"
         calls:
-            - ['setContainer', [@service_container]]
+            - ['setContainer', ["@service_container"]]
 
     sirian.sphinx.query_logger:
-        class: %sirian.sphinx.query_logger.class%
-        arguments: [@?logger, @?debug.stopwatch]
+        class: "%sirian.sphinx.query_logger.class%"
+        arguments: ["@?logger", "@?debug.stopwatch"]
 
     sirian.sphinx.connection:
-        class: %sirian.sphinx.connection.class%
+        class: "%sirian.sphinx.connection.class%"
         abstract: true
         calls:
-            - [setQueryLogger, [@sirian.sphinx.query_logger]]
+            - [setQueryLogger, ["@sirian.sphinx.query_logger"]]
 
     sirian.sphinx.data_collector:
-        class: %sirian.sphinx.data_collector.class%
-        arguments: [@sirian.sphinx.query_logger]
+        class: "%sirian.sphinx.data_collector.class%"
+        arguments: ["@sirian.sphinx.query_logger"]
         tags:
             - { name: data_collector, template: 'SirianSphinxBundle:Profiler:collector.html.twig', id: sphinx}
